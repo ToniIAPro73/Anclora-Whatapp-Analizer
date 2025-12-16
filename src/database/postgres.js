@@ -1,4 +1,4 @@
-requireconst { Pool } = require("pg");
+const { Pool } = require("pg");
 const logger = require("../utils/logger");
 
 // Pool de conexiones PostgreSQL
@@ -76,17 +76,17 @@ async function saveAnalysis(data) {
     new Date(),
   ];
 
-    try {
+  try {
     const result = await pool.query(query, values);
     const id = result.rows[0].id;
     logger.info(`✓ Guardado en DB con ID: ${id}`);
-    
+
     // NUEVO: Notificar a Make
     await notifyMake(data, id);
-    
+
     return id;
-    } catch (error) {
-        logger.error("Error guardando análisis en DB:", error.message);
+  } catch (error) {
+    logger.error("Error guardando análisis en DB:", error.message);
     throw error;
   }
 }
@@ -255,6 +255,6 @@ module.exports = {
   searchByRelevance,
   fullTextSearch,
   logError,
-  notifyMake,  // NUEVO
+  notifyMake, // NUEVO
   pool,
 };
