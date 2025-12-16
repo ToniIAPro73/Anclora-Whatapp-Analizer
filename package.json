@@ -1,0 +1,35 @@
+{
+  "name": "whatsapp-ai-analyzer-mvp",
+  "version": "1.0.0",
+  "description": "Sistema automatizado de análisis de enlaces compartidos en WhatsApp usando IA local",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test-db": "node scripts/test-db.js",
+    "test-ollama": "node scripts/test-ollama.js",
+    "test-scraper": "node scripts/test-scraper.js",
+    "stats": "node scripts/show-stats.js",
+    "setup-db": "psql -U postgres -d whatsapp_ai_analyzer -f sql/schema.sql"
+  },
+  "keywords": ["whatsapp", "ai", "ollama", "scraping", "automation"],
+  "author": "Toni Ballesteros",
+  "license": "MIT",
+  "dependencies": {
+    "@whiskeysockets/baileys": "^6.6.0",
+    "pino": "^8.17.2",
+    "playwright": "^1.40.1",
+    "cheerio": "^1.0.0-rc.12",
+    "dotenv": "^16.3.1",
+    "pg": "^8.11.3",
+    "winston": "^3.11.0",
+    "node-fetch": "^2.7.0",
+    "@mozilla/readability": "^0.5.0",
+    "jsdom": "^23.0.1"
+  },
+  "devDependencies": {
+    "qrcode-terminal": "^0.12.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
