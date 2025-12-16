@@ -5,6 +5,7 @@
 Has descargado el proyecto completo listo para ejecutar. El archivo incluye:
 
 ### 📁 Estructura completa
+
 - ✅ Código fuente completo (18 archivos)
 - ✅ Configuración base (.env.example)
 - ✅ Schema de base de datos (PostgreSQL)
@@ -12,6 +13,7 @@ Has descargado el proyecto completo listo para ejecutar. El archivo incluye:
 - ✅ Documentación completa
 
 ### 📝 Archivos principales
+
 - `README.md` - Documentación completa
 - `QUICKSTART.md` - Guía de inicio rápido
 - `CHANGELOG.md` - Historial de versiones
@@ -39,6 +41,7 @@ npm install
 ```
 
 Esto instalará:
+
 - `@whiskeysockets/baileys` - WhatsApp
 - `playwright` - Web scraping
 - `pg` - PostgreSQL client
@@ -56,7 +59,7 @@ npx playwright install-deps chromium
 
 ```bash
 # Conecta a tu container PostgreSQL existente
-docker exec -it anclora-postgres psql -U postgres
+docker exec -it [nombre_tu_container] psql -U postgres
 
 # Dentro de psql:
 CREATE DATABASE whatsapp_ai_analyzer;
@@ -64,7 +67,7 @@ CREATE DATABASE whatsapp_ai_analyzer;
 \q
 
 # Aplica el schema (desde tu terminal)
-docker exec -i anclora-postgres psql -U postgres -d whatsapp_ai_analyzer < sql/schema.sql
+docker exec -i [nombre_tu_container] psql -U postgres -d whatsapp_ai_analyzer < sql/schema.sql
 ```
 
 ### 5. Configurar variables de entorno
@@ -109,13 +112,14 @@ npm run test-ollama
 
 **Ambos deben mostrar ✅**
 
-### 7. ¡Iniciar!
+### 7. ¡Iniciar
 
 ```bash
 npm start
 ```
 
 **Aparecerá un código QR. Escanéalo con WhatsApp:**
+
 1. Abre WhatsApp en tu móvil
 2. Configuración → Dispositivos vinculados
 3. Vincular dispositivo
@@ -151,13 +155,14 @@ npm run test-db && npm run test-ollama
 
 Una vez conectado, envíate un mensaje con una URL:
 
-```
+```text
 https://github.com/nodejs/node
 ```
 
 ### 2. Observa los logs
 
 Verás en la terminal cómo se procesa:
+
 - 📥 Scraping del contenido
 - 🤖 Análisis con Ollama
 - 💾 Almacenamiento en PostgreSQL
@@ -175,9 +180,9 @@ O directamente en PostgreSQL:
 docker exec -it [tu_container] psql -U postgres -d whatsapp_ai_analyzer
 
 # Consulta los 10 más relevantes
-SELECT title, categoria, relevancia, url 
-FROM link_analysis 
-ORDER BY relevancia DESC 
+SELECT title, categoria, relevancia, url
+FROM link_analysis
+ORDER BY relevancia DESC
 LIMIT 10;
 ```
 
@@ -185,28 +190,34 @@ LIMIT 10;
 
 ## 🔧 Modelos Ollama Recomendados
 
-### Según tu VRAM (4GB):
+### Según tu VRAM (4GB)
 
 **Opción 1: Llama 3.1 8B (Recomendado)**
+
 ```bash
 ollama pull llama3.1:8b
 ```
+
 - Mejor balance calidad/velocidad
 - ~5-10s de inferencia
 - 4.7GB de VRAM
 
 **Opción 2: Mistral 7B**
+
 ```bash
 ollama pull mistral:7b
 ```
+
 - Más rápido
 - ~3-7s de inferencia
 - 4.1GB de VRAM
 
 **Opción 3: Qwen 2.5 7B**
+
 ```bash
 ollama pull qwen2.5:7b
 ```
+
 - Excelente para español
 - ~5-10s de inferencia
 - 4.4GB de VRAM
@@ -266,12 +277,14 @@ npm start
 Una vez instalado, lee estos documentos para profundizar:
 
 1. **README.md** - Documentación completa
+
    - Arquitectura detallada
    - Configuración avanzada
    - Personalización de prompts
    - Consultas SQL útiles
 
 2. **QUICKSTART.md** - Guía rápida de 5 minutos
+
    - Comandos condensados
    - Troubleshooting express
 
@@ -304,7 +317,7 @@ Una vez que todo funcione:
 
 ---
 
-## 🎉 ¡Listo para usar!
+## 🎉 ¡Listo para usar
 
 Si todo está configurado correctamente, ya tienes un sistema completo de análisis automatizado de enlaces usando IA 100% local y privado.
 
@@ -315,4 +328,4 @@ Si todo está configurado correctamente, ya tienes un sistema completo de análi
 ---
 
 **Desarrollado por Toni Ballesteros**  
-antonio@anclora.com
+<antonio@anclora.com>
