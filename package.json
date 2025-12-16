@@ -5,26 +5,33 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "fix-env": "node scripts/fix-env.js",
+    "setup-db": "node scripts/setup-database.js",
     "test-db": "node scripts/test-db.js",
     "test-ollama": "node scripts/test-ollama.js",
     "test-scraper": "node scripts/test-scraper.js",
-    "stats": "node scripts/show-stats.js",
-    "setup-db": "psql -U postgres -d whatsapp_ai_analyzer -f sql/schema.sql"
+    "stats": "node scripts/show-stats.js"
   },
-  "keywords": ["whatsapp", "ai", "ollama", "scraping", "automation"],
+  "keywords": [
+    "whatsapp",
+    "ai",
+    "ollama",
+    "scraping",
+    "automation"
+  ],
   "author": "Toni Ballesteros",
   "license": "MIT",
   "dependencies": {
-    "@whiskeysockets/baileys": "^6.6.0",
-    "pino": "^8.17.2",
-    "playwright": "^1.40.1",
+    "@mozilla/readability": "^0.6.0",
+    "@whiskeysockets/baileys": "^7.0.0-rc.9",
     "cheerio": "^1.0.0-rc.12",
     "dotenv": "^16.3.1",
-    "pg": "^8.11.3",
-    "winston": "^3.11.0",
+    "jsdom": "^23.0.1",
     "node-fetch": "^2.7.0",
-    "@mozilla/readability": "^0.5.0",
-    "jsdom": "^23.0.1"
+    "pg": "^8.11.3",
+    "pino": "^8.17.2",
+    "playwright": "^1.40.1",
+    "winston": "^3.11.0"
   },
   "devDependencies": {
     "qrcode-terminal": "^0.12.0"

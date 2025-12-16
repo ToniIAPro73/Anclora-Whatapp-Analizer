@@ -15,12 +15,14 @@ Sistema automatizado para analizar enlaces compartidos en WhatsApp usando IA loc
 ## 🎯 Requisitos
 
 ### Hardware
+
 - **RAM**: 16GB mínimo, 32GB recomendado
 - **GPU**: NVIDIA con 4GB+ VRAM (opcional pero recomendado)
 - **Almacenamiento**: 20GB+ libres
 
 ### Software
-- **Node.js**: v18+ 
+
+- **Node.js**: v18+
 - **Docker** con PostgreSQL
 - **Ollama**: Instalado con modelo descargado
 - **Git**: Para clonar el proyecto
@@ -50,7 +52,7 @@ npx playwright install-deps chromium
 
 ### 4. Configurar base de datos
 
-#### Si ya tienes PostgreSQL en Docker:
+#### Si ya tienes PostgreSQL en Docker
 
 ```bash
 # Conecta a tu container
@@ -64,7 +66,7 @@ CREATE DATABASE whatsapp_ai_analyzer;
 docker exec -i [nombre_container_postgres] psql -U postgres -d whatsapp_ai_analyzer < sql/schema.sql
 ```
 
-#### Si no tienes PostgreSQL:
+#### Si no tienes PostgreSQL
 
 ```bash
 # Crea container PostgreSQL
@@ -186,6 +188,7 @@ npm run stats
 ```
 
 Muestra:
+
 - Total procesados
 - Top categorías
 - Top 10 más relevantes
@@ -199,10 +202,10 @@ Muestra:
 docker exec -it [nombre_container] psql -U postgres -d whatsapp_ai_analyzer
 
 # Top 10 más relevantes
-SELECT title, categoria, relevancia, url 
-FROM link_analysis 
-WHERE relevancia >= 4 
-ORDER BY relevancia DESC, created_at DESC 
+SELECT title, categoria, relevancia, url
+FROM link_analysis
+WHERE relevancia >= 4
+ORDER BY relevancia DESC, created_at DESC
 LIMIT 10;
 
 # Buscar por categoría
@@ -220,13 +223,13 @@ LIMIT 20;
 
 ## 🔧 Scripts disponibles
 
-| Comando | Descripción |
-|---------|-------------|
-| `npm start` | Inicia el sistema completo |
-| `npm run test-db` | Verifica conexión PostgreSQL |
-| `npm run test-ollama` | Verifica Ollama y realiza inferencia de prueba |
-| `npm run test-scraper` | Prueba scrapers con URLs |
-| `npm run stats` | Muestra estadísticas completas |
+| Comando                | Descripción                                    |
+| ---------------------- | ---------------------------------------------- |
+| `npm start`            | Inicia el sistema completo                     |
+| `npm run test-db`      | Verifica conexión PostgreSQL                   |
+| `npm run test-ollama`  | Verifica Ollama y realiza inferencia de prueba |
+| `npm run test-scraper` | Prueba scrapers con URLs                       |
+| `npm run stats`        | Muestra estadísticas completas                 |
 
 ## 🏗️ Arquitectura
 
@@ -302,11 +305,11 @@ curl -fsSL https://ollama.com/install.sh | sh
 
 ### Ajustar modelo según VRAM
 
-| VRAM | Modelo recomendado | Comando |
-|------|-------------------|---------|
-| 4GB | `llama3.1:8b` o `mistral:7b` | `ollama pull llama3.1:8b` |
-| 6GB | `qwen2.5:14b` | `ollama pull qwen2.5:14b` |
-| 8GB+ | `llama3.1:70b` | `ollama pull llama3.1:70b` |
+| VRAM | Modelo recomendado           | Comando                    |
+| ---- | ---------------------------- | -------------------------- |
+| 4GB  | `llama3.1:8b` o `mistral:7b` | `ollama pull llama3.1:8b`  |
+| 6GB  | `qwen2.5:14b`                | `ollama pull qwen2.5:14b`  |
+| 8GB+ | `llama3.1:70b`               | `ollama pull llama3.1:70b` |
 
 ### Personalizar prompts
 
@@ -387,9 +390,10 @@ MIT License - Uso libre para proyectos personales y comerciales.
 ## 👤 Autor
 
 **Toni Ballesteros**
+
 - Consultor IA Generativa & Real Estate
 - Fundador: Anclora (Press, Nexus, Kairon)
-- Email: antonio@anclora.com
+- Email: <antonio@anclora.com>
 
 ---
 

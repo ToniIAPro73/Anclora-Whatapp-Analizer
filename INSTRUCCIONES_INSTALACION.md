@@ -56,7 +56,7 @@ npx playwright install-deps chromium
 
 ```bash
 # Conecta a tu container PostgreSQL existente
-docker exec -it [nombre_tu_container] psql -U postgres
+docker exec -it anclora-postgres psql -U postgres
 
 # Dentro de psql:
 CREATE DATABASE whatsapp_ai_analyzer;
@@ -64,7 +64,7 @@ CREATE DATABASE whatsapp_ai_analyzer;
 \q
 
 # Aplica el schema (desde tu terminal)
-docker exec -i [nombre_tu_container] psql -U postgres -d whatsapp_ai_analyzer < sql/schema.sql
+docker exec -i anclora-postgres psql -U postgres -d whatsapp_ai_analyzer < sql/schema.sql
 ```
 
 ### 5. Configurar variables de entorno
