@@ -1,16 +1,16 @@
-const { Pool } = require('pg');
-const logger = require('../utils/logger');
+requireconst { Pool } = require("pg");
+const logger = require("../utils/logger");
 
 // Pool de conexiones PostgreSQL
 const pool = new Pool({
-    host: process.env.DB_HOST,
-    port: parseInt(process.env.DB_PORT),
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    max: 20,
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 2000,
+  host: process.env.DB_HOST,
+  port: parseInt(process.env.DB_PORT),
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
 });
 
 /**
@@ -18,21 +18,23 @@ const pool = new Pool({
  * @returns {Promise<boolean>} True si la conexión es exitosa
  */
 async function testConnection() {
-    try {
-        const client = await pool.connect();
-        const result = await client.query('SELECT NOW() as current_time, version() as pg_version');
-        client.release();
-        
-        logger.info('✓ Conexión PostgreSQL establecida');
-        logger.info(`  Versión: ${result.rows[0].pg_version.split(',')[0]}`);
-        logger.info(`  Hora servidor: ${result.rows[0].current_time}`);
-        
-        return true;
-    } catch (error) {
-        logger.error('✗ Error conexión PostgreSQL:');
-        logger.error(`  ${error.message}`);
-        return false;
-    }
+  try {
+    const client = await pool.connect();
+    const result = await client.query(
+      "SELECT NOW() as current_time, version() as pg_version"
+    );
+    client.release();
+
+    logger.info("✓ Conexión PostgreSQL establecida");
+    logger.info(`  Versión: ${result.rows[0].pg_version.split(",")[0]}`);
+    logger.info(`  Hora servidor: ${result.rows[0].current_time}`);
+
+    return true;
+  } catch (error) {
+    logger.error("✗ Error conexión PostgreSQL:");
+    logger.error(`  ${error.message}`);
+    return false;
+  }
 }
 
 /**
@@ -41,7 +43,7 @@ async function testConnection() {
  * @returns {Promise<number>} ID del registro insertado
  */
 async function saveAnalysis(data) {
-    const query = `
+  const query = `
         INSERT INTO link_analysis (
             url, platform, author, title, 
             resumen_ejecutivo, temas_principales, insights_clave,
@@ -56,33 +58,37 @@ async function saveAnalysis(data) {
             categoria = $9
         RETURNING id;
     `;
-    
-    const values = [
-        data.url,
-        data.platform,
-        data.author,
-        data.title,
-        data.resumen_ejecutivo,
-        data.temas_principales,
-        data.insights_clave,
-        data.relevancia,
-        data.categoria,
-        data.tipo_contenido,
-        data.contenido_completo,
-        data.whatsapp_sender,
-        data.processing_time_seconds,
-        new Date()
-    ];
-    
+
+  const values = [
+    data.url,
+    data.platform,
+    data.author,
+    data.title,
+    data.resumen_ejecutivo,
+    data.temas_principales,
+    data.insights_clave,
+    data.relevancia,
+    data.categoria,
+    data.tipo_contenido,
+    data.contenido_completo,
+    data.whatsapp_sender,
+    data.processing_time_seconds,
+    new Date(),
+  ];
+
     try {
-        const result = await pool.query(query, values);
-        const id = result.rows[0].id;
-        logger.info(`✓ Guardado en DB con ID: ${id}`);
-        return id;
+    const result = await pool.query(query, values);
+    const id = result.rows[0].id;
+    logger.info(`✓ Guardado en DB con ID: ${id}`);
+    
+    // NUEVO: Notificar a Make
+    await notifyMake(data, id);
+    
+    return id;
     } catch (error) {
-        logger.error('Error guardando análisis en DB:', error.message);
-        throw error;
-    }
+        logger.error("Error guardando análisis en DB:", error.message);
+    throw error;
+  }
 }
 
 /**
@@ -91,9 +97,9 @@ async function saveAnalysis(data) {
  * @returns {Promise<boolean>} True si existe
  */
 async function urlExists(url) {
-    const query = 'SELECT id, created_at FROM link_analysis WHERE url = $1';
-    const result = await pool.query(query, [url]);
-    return result.rows.length > 0;
+  const query = "SELECT id, created_at FROM link_analysis WHERE url = $1";
+  const result = await pool.query(query, [url]);
+  return result.rows.length > 0;
 }
 
 /**
@@ -101,9 +107,9 @@ async function urlExists(url) {
  * @returns {Promise<Array>} Array con estadísticas diarias
  */
 async function getStats() {
-    const query = 'SELECT * FROM stats_daily LIMIT 7';
-    const result = await pool.query(query);
-    return result.rows;
+  const query = "SELECT * FROM stats_daily LIMIT 7";
+  const result = await pool.query(query);
+  return result.rows;
 }
 
 /**
@@ -113,7 +119,7 @@ async function getStats() {
  * @returns {Promise<Array>} Array de análisis
  */
 async function searchByCategory(categoria, limit = 10) {
-    const query = `
+  const query = `
         SELECT 
             id, url, title, resumen_ejecutivo, 
             relevancia, created_at, platform
@@ -122,8 +128,8 @@ async function searchByCategory(categoria, limit = 10) {
         ORDER BY relevancia DESC, created_at DESC
         LIMIT $2
     `;
-    const result = await pool.query(query, [categoria, limit]);
-    return result.rows;
+  const result = await pool.query(query, [categoria, limit]);
+  return result.rows;
 }
 
 /**
@@ -133,7 +139,7 @@ async function searchByCategory(categoria, limit = 10) {
  * @returns {Promise<Array>} Array de análisis
  */
 async function searchByRelevance(minRelevancia = 4, limit = 20) {
-    const query = `
+  const query = `
         SELECT 
             id, url, title, resumen_ejecutivo, 
             categoria, relevancia, created_at, platform
@@ -142,8 +148,8 @@ async function searchByRelevance(minRelevancia = 4, limit = 20) {
         ORDER BY relevancia DESC, created_at DESC
         LIMIT $2
     `;
-    const result = await pool.query(query, [minRelevancia, limit]);
-    return result.rows;
+  const result = await pool.query(query, [minRelevancia, limit]);
+  return result.rows;
 }
 
 /**
@@ -153,7 +159,7 @@ async function searchByRelevance(minRelevancia = 4, limit = 20) {
  * @returns {Promise<Array>} Array de análisis
  */
 async function fullTextSearch(searchTerm, limit = 10) {
-    const query = `
+  const query = `
         SELECT 
             id, url, title, resumen_ejecutivo, 
             categoria, relevancia, created_at,
@@ -164,8 +170,8 @@ async function fullTextSearch(searchTerm, limit = 10) {
         ORDER BY rank DESC, relevancia DESC
         LIMIT $2
     `;
-    const result = await pool.query(query, [searchTerm, limit]);
-    return result.rows;
+  const result = await pool.query(query, [searchTerm, limit]);
+  return result.rows;
 }
 
 /**
@@ -175,29 +181,80 @@ async function fullTextSearch(searchTerm, limit = 10) {
  * @param {string} error - Mensaje de error
  */
 async function logError(url, platform, error) {
-    const query = `
+  const query = `
         INSERT INTO link_analysis (url, platform, error_log, created_at)
         VALUES ($1, $2, $3, $4)
         ON CONFLICT (url) DO UPDATE SET
             error_log = $3,
             created_at = $4
     `;
-    
-    try {
-        await pool.query(query, [url, platform, error, new Date()]);
-    } catch (err) {
-        logger.error('Error registrando fallo:', err.message);
-    }
+
+  try {
+    await pool.query(query, [url, platform, error, new Date()]);
+  } catch (err) {
+    logger.error("Error registrando fallo:", err.message);
+  }
 }
 
-module.exports = { 
-    testConnection, 
-    saveAnalysis, 
-    urlExists, 
-    getStats,
-    searchByCategory,
-    searchByRelevance,
-    fullTextSearch,
-    logError,
-    pool 
+/**
+ * Notifica a Make sobre nuevo análisis
+ * @param {Object} data - Datos del análisis guardado
+ * @param {number} id - ID del registro
+ */
+async function notifyMake(data, id) {
+  const MAKE_WEBHOOK_URL = process.env.MAKE_WEBHOOK_URL;
+
+  if (!MAKE_WEBHOOK_URL) {
+    logger.warn("⚠️  MAKE_WEBHOOK_URL no configurado en .env");
+    return;
+  }
+
+  try {
+    const payload = {
+      id: id,
+      title: data.title || "Sin título",
+      url: data.url,
+      categoria: data.categoria,
+      relevancia: data.relevancia,
+      resumen_ejecutivo: data.resumen_ejecutivo,
+      temas_principales: Array.isArray(data.temas_principales)
+        ? data.temas_principales.join(", ")
+        : data.temas_principales,
+      insights_clave: Array.isArray(data.insights_clave)
+        ? data.insights_clave
+            .map((insight, i) => `${i + 1}. ${insight}`)
+            .join("\n\n")
+        : data.insights_clave,
+      platform: data.platform,
+      author: data.author || "Desconocido",
+      processed_at: new Date().toLocaleString("es-ES"),
+    };
+
+    const response = await fetch(MAKE_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (response.ok) {
+      logger.info("✅ Notificación enviada a Make");
+    } else {
+      logger.error(`❌ Error Make: ${response.status} ${response.statusText}`);
+    }
+  } catch (error) {
+    logger.error("❌ Error notificando Make:", error.message);
+  }
+}
+
+module.exports = {
+  testConnection,
+  saveAnalysis,
+  urlExists,
+  getStats,
+  searchByCategory,
+  searchByRelevance,
+  fullTextSearch,
+  logError,
+  notifyMake,  // NUEVO
+  pool,
 };
